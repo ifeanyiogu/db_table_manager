@@ -1,0 +1,31 @@
+package handlers
+
+import(
+    "database/sql"
+    "strings"
+    
+    "github.com/gofiber/fiber/v2"
+    
+    "go-tb/users"
+    "go-tb/business"
+)
+
+func ListTableHandler(db *sql.DB) fiber.Handler{
+    return func(c *fiber.Ctx)error{
+        user := c.Locals("user").(users.User)
+        if err := user.GetUser(db); err != nil{
+            return c.Status(404).JSON(fiber.Map{"error":err.Error()})
+        }
+        tables, err := business.ListTables(db, user.Username)
+        if err != nil{
+            return c.Status(400).JSON(fiber.Map{"error":err.Error()})
+        }
+        
+        for i, table := range tables{
+            tables[i].Name = strings.TrimPrefix(table.Name, user.Username+"_")
+            
+        }
+        
+        return c.Status(200).JSON(fiber.Map{"tables": tables})
+    }
+}
