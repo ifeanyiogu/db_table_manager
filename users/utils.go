@@ -13,10 +13,7 @@ import(
 
 
 func LoadEnv(key string)string{
-    err := godotenv.Load()
-    if err != nil{
-        panic("env failed")
-    }
+    godotenv.Load()
     
     val, exists := os.LookupEnv(key)
     if !exists{
