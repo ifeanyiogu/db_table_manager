@@ -51,5 +51,10 @@ func main(){
     app.Get("/columns/get/:table", middleware.AuthUser(db), handlers.ShowColumnsHandler(db))
     app.Get("/data/:table/:id", middleware.AuthUser(db), handlers.ShowDataHandler(db))
     
-    app.Listen(":8000")
+    port, ok := os.LookupEnv("PORT")
+    if !ok{
+        panic("invalud port")
+    }
+    
+    app.Listen(":"+port)
 }
