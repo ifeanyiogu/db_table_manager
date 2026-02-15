@@ -14,9 +14,7 @@ import (
 )
 
 func main(){
-    if err := godotenv.Load(); err != nil{
-        panic("Unable to env file")
-    }
+    godotenv.Load()
     db := db.Connect()
     defer db.Close()
     app := fiber.New()
